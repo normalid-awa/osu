@@ -164,6 +164,36 @@ namespace osu.Game.Localisation
         /// </summary>
         public static LocalisableString ShrinkGameToSafeArea => new TranslatableString(getKey(@"shrink_game_to_safe_area"), @"Shrink game to avoid cameras and notches");
 
+        /// <summary>
+        /// "Colorblind Mode"
+        /// </summary>
+        public static LocalisableString ColorblindMode => new TranslatableString(getKey(@"colorblind_mode"), @"Colorblind Mode");
+
+        /// <summary>
+        /// "Off"
+        /// </summary>
+        public static LocalisableString ColorblindModeOff => new TranslatableString(getKey(@"colorblind_mode_off"), @"Off");
+
+        /// <summary>
+        /// "Deuteranopia"
+        /// </summary>
+        public static LocalisableString ColorblindModeDeuteranopia => new TranslatableString(getKey(@"colorblind_mode_deuteranopia"), @"Deuteranopia");
+
+        /// <summary>
+        /// "Protanopia"
+        /// </summary>
+        public static LocalisableString ColorblindModeProtanopia => new TranslatableString(getKey(@"colorblind_mode_protanopia"), @"Protanopia");
+
+        /// <summary>
+        /// "Tritanopia"
+        /// </summary>
+        public static LocalisableString ColorblindModeTritanopia => new TranslatableString(getKey(@"colorblind_mode_tritanopia"), @"Tritanopia");
+
+        /// <summary>
+        /// "Monochromacy"
+        /// </summary>
+        public static LocalisableString ColorblindModeMonochromacy => new TranslatableString(getKey(@"colorblind_mode_monochromacy"), @"Monochromacy");
+
         private static string getKey(string key) => $@"{prefix}:{key}";
     }
 }

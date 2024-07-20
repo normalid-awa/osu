@@ -136,6 +136,8 @@ namespace osu.Game.Configuration
             // See https://stackoverflow.com/a/63307411 for default sourcing.
             SetDefault(OsuSetting.Prefer24HourTime, !CultureInfoHelper.SystemCulture.DateTimeFormat.ShortTimePattern.Contains(@"tt"));
 
+            SetDefault(OsuSetting.ColorblindMode, ColorblindMode.Off);
+
             // Gameplay
             SetDefault(OsuSetting.PositionalHitsoundsLevel, 0.2f, 0, 1);
             SetDefault(OsuSetting.DimLevel, 0.7, 0, 1, 0.01);
@@ -444,5 +446,6 @@ namespace osu.Game.Configuration
         HideCountryFlags,
         EditorTimelineShowTimingChanges,
         EditorTimelineShowTicks,
+        ColorblindMode,
     }
 }
