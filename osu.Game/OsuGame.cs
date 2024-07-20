@@ -141,6 +141,10 @@ namespace osu.Game
 
         private Container overlayOffsetContainer;
 
+        private Container colorblindContainer;
+
+        private ColorblindContainer.ColorblindModeContent colorblindContent;
+
         [Resolved]
         private FrameworkConfigManager frameworkConfig { get; set; }
 
@@ -954,7 +958,9 @@ namespace osu.Game
 
             Container logoContainer;
 
-            AddRange(new Drawable[]
+            colorblindContent = new ColorblindContainer.ColorblindModeContent();
+
+            colorblindContent.AddRange(new Drawable[]
             {
                 new VolumeControlReceptor
                 {
@@ -1022,6 +1028,11 @@ namespace osu.Game
                 topMostOverlayContent = new Container { RelativeSizeAxes = Axes.Both },
                 idleTracker,
                 new ConfineMouseTracker()
+            });
+
+            Add(colorblindContainer = new ColorblindContainer(colorblindContent)
+            {
+                RelativeSizeAxes = Axes.Both,
             });
 
             dependencies.Cache(ScreenFooter);
