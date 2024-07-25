@@ -3,7 +3,9 @@
 
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
+using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
@@ -11,6 +13,7 @@ using osu.Framework.Input.Events;
 using osu.Game.Beatmaps;
 using osu.Game.Configuration;
 using osu.Game.Graphics;
+using osu.Game.Graphics.Backgrounds;
 using osu.Game.Graphics.Sprites;
 using osu.Game.Graphics.UserInterface;
 using osu.Game.Online.API;
@@ -51,7 +54,7 @@ namespace osu.Game.Screens.Select.Carousel
         private Bindable<bool> preferNoVideo = null!;
 
         [BackgroundDependencyLoader]
-        private void load(OsuConfigManager config)
+        private void load(OsuConfigManager config, OsuColour colour)
         {
             const float icon_size = 14;
 
@@ -62,10 +65,31 @@ namespace osu.Game.Screens.Select.Carousel
 
             Content.AddRange(new Drawable[]
             {
+                new Container
+                {
+                    RelativeSizeAxes = Axes.Both,
+                    Children = new Drawable[]
+                    {
+                        new Box
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            Colour = ColourInfo.GradientVertical(
+                                new Color4(20, 43, 51, 255),
+                                new Color4(40, 86, 102, 255)
+                            ),
+                        },
+                        new Triangles
+                        {
+                            RelativeSizeAxes = Axes.Both,
+                            ColourLight = Color4Extensions.FromHex(@"3a7285"),
+                            ColourDark = Color4Extensions.FromHex(@"123744")
+                        },
+                    }
+                },
                 progressFill = new Box
                 {
                     Colour = Color4.White,
-                    Alpha = 0.2f,
+                    Alpha = 0.3f,
                     Blending = BlendingParameters.Additive,
                     RelativeSizeAxes = Axes.Both,
                     Width = 0,
