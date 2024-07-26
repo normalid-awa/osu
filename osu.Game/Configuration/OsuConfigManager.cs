@@ -132,6 +132,7 @@ namespace osu.Game.Configuration
             SetDefault(OsuSetting.CursorRotation, true);
 
             SetDefault(OsuSetting.MenuParallax, true);
+            SetDefault(OsuSetting.ParallaxMultiplier, 1.0f, 0.1f, 2f, 0.01f);
 
             // See https://stackoverflow.com/a/63307411 for default sourcing.
             SetDefault(OsuSetting.Prefer24HourTime, !CultureInfoHelper.SystemCulture.DateTimeFormat.ShortTimePattern.Contains(@"tt"));
@@ -372,6 +373,7 @@ namespace osu.Game.Configuration
         MenuTips,
         CursorRotation,
         MenuParallax,
+        ParallaxMultiplier,
         Prefer24HourTime,
         BeatmapDetailTab,
         BeatmapDetailModsFilter,

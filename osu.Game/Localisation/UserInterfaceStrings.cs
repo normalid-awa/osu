@@ -35,6 +35,11 @@ namespace osu.Game.Localisation
         public static LocalisableString Parallax => new TranslatableString(getKey(@"parallax"), @"Parallax");
 
         /// <summary>
+        /// "Parallax multiplier"
+        /// </summary>
+        public static LocalisableString ParallaxMultiplier => new TranslatableString(getKey(@"parallax_multiplier"), @"Parallax multiplier");
+
+        /// <summary>
         /// "Hold-to-confirm activation time"
         /// </summary>
         public static LocalisableString HoldToConfirmActivationTime => new TranslatableString(getKey(@"hold_to_confirm_activation_time"), @"Hold-to-confirm activation time");

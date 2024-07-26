@@ -26,6 +26,8 @@ namespace osu.Game.Graphics.Containers
 
         private Bindable<bool> parallaxEnabled;
 
+        private Bindable<float> parallaxMultiplier;
+
         private const float parallax_duration = 100;
 
         private bool firstUpdate = true;
@@ -58,6 +60,8 @@ namespace osu.Game.Graphics.Containers
                     content.Scale = new Vector2(1 + Math.Abs(ParallaxAmount));
                 }
             };
+
+            parallaxMultiplier = config.GetBindable<float>(OsuSetting.ParallaxMultiplier);
         }
 
         protected override void LoadComplete()
@@ -87,6 +91,8 @@ namespace osu.Game.Graphics.Containers
 
                     offset = relativeAmount * sizeDiv2 * ParallaxAmount;
                 }
+
+                offset *= parallaxMultiplier.Value;
 
                 double elapsed = Math.Clamp(Clock.ElapsedFrameTime, 0, parallax_duration);
 
