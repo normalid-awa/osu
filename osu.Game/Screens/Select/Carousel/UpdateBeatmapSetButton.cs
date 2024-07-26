@@ -7,6 +7,7 @@ using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Colour;
 using osu.Framework.Graphics.Containers;
+using osu.Framework.Graphics.Effects;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Graphics.Sprites;
 using osu.Framework.Input.Events;
@@ -25,9 +26,11 @@ namespace osu.Game.Screens.Select.Carousel
 {
     public partial class UpdateBeatmapSetButton : OsuAnimatedButton
     {
+        private readonly float transition_duration = 250f;
         private readonly BeatmapSetInfo beatmapSetInfo;
         private SpriteIcon icon = null!;
         private Box progressFill = null!;
+        private Container background = null!;
 
         [Resolved]
         private BeatmapModelDownloader beatmapDownloader { get; set; } = null!;
@@ -65,7 +68,7 @@ namespace osu.Game.Screens.Select.Carousel
 
             Content.AddRange(new Drawable[]
             {
-                new Container
+                background = new Container
                 {
                     RelativeSizeAxes = Axes.Both,
                     Children = new Drawable[]
@@ -190,12 +193,14 @@ namespace osu.Game.Screens.Select.Carousel
         protected override bool OnHover(HoverEvent e)
         {
             icon.Spin(400, RotationDirection.Clockwise);
+            background.FadeTo(0.6f, transition_duration);
             return base.OnHover(e);
         }
 
         protected override void OnHoverLost(HoverLostEvent e)
         {
             icon.Spin(4000, RotationDirection.Clockwise);
+            background.FadeTo(1f, transition_duration);
             base.OnHoverLost(e);
         }
     }
