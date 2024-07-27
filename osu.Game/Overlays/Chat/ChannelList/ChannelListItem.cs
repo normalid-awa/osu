@@ -5,16 +5,13 @@ using System;
 using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
-using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
-using osu.Framework.Logging;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
-using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Online.Chat;
 using osu.Game.Overlays.Chat.Listing;
 using osu.Game.Users.Drawables;
@@ -36,10 +33,7 @@ namespace osu.Game.Overlays.Chat.ChannelList
         private Box hoverBox = null!;
         private Box selectBox = null!;
         private ChannelListItemCloseButton? close;
-        private OsuSpriteText? channelName;
-        private DrawableChatUsername? drawableUsername;
-
-        private Bindable<Colour4> channelNameColour = new Bindable<Colour4>();
+        private Drawable? channelName;
 
         [Resolved]
         private Bindable<Channel> selectedChannel { get; set; } = null!;
@@ -88,7 +82,7 @@ namespace osu.Game.Overlays.Chat.ChannelList
                         new Drawable?[]
                         {
                             createIcon(),
-                            createChannelName(),
+                            channelName = createChannelName(),
                             createMentionPill(),
                             close = createCloseButton(),
                         }
@@ -97,12 +91,6 @@ namespace osu.Game.Overlays.Chat.ChannelList
             };
 
             Action = () => OnRequestSelect?.Invoke(Channel);
-
-            channelNameColour.BindValueChanged(v =>
-            {
-                channelName?.FadeColour(v.NewValue, 250, Easing.OutQuint);
-                drawableUsername?.FadeColour(v.NewValue, 250, Easing.OutQuint);
-            }, true);
         }
 
         protected override void LoadComplete()
@@ -148,7 +136,7 @@ namespace osu.Game.Overlays.Chat.ChannelList
         private Drawable createChannelName()
         {
             if (Channel.Type != ChannelType.PM)
-                return channelName = new TruncatingSpriteText
+                return new TruncatingSpriteText
                 {
                     Anchor = Anchor.CentreLeft,
                     Origin = Anchor.CentreLeft,
@@ -159,14 +147,14 @@ namespace osu.Game.Overlays.Chat.ChannelList
                     RelativeSizeAxes = Axes.X,
                 };
 
-            return drawableUsername = new DrawableChatUsername(Channel.Users.First())
+            return new DrawableChatUsername(Channel.Users.First())
             {
                 Anchor = Anchor.CentreLeft,
                 Origin = Anchor.CentreLeft,
                 Text = Channel.Name,
                 FontSize = 14,
                 AutoSizeAxes = Axes.Both,
-                AccentColour = Color4Extensions.FromHex(Channel.Users.First().Colour ?? "#fff"),
+                AccentColour = colourProvider.Light3,
             };
         }
 
@@ -208,9 +196,9 @@ namespace osu.Game.Overlays.Chat.ChannelList
                 selectBox.FadeOut(200, Easing.OutQuint);
 
             if (Unread.Value || selected)
-                channelNameColour.Value = colourProvider.Content1;
+                channelName.FadeColour(colourProvider.Content1, 200, Easing.OutQuint);
             else
-                channelNameColour.Value = colourProvider.Light3;
+                channelName.FadeColour(colourProvider.Light3, 300, Easing.OutQuint);
 
         }
 
