@@ -5,13 +5,16 @@ using System;
 using System.Linq;
 using osu.Framework.Allocation;
 using osu.Framework.Bindables;
+using osu.Framework.Extensions.Color4Extensions;
 using osu.Framework.Graphics;
 using osu.Framework.Graphics.Containers;
 using osu.Framework.Graphics.Shapes;
 using osu.Framework.Input.Events;
+using osu.Framework.Logging;
 using osu.Game.Graphics;
 using osu.Game.Graphics.Containers;
 using osu.Game.Graphics.Sprites;
+using osu.Game.Online.API.Requests.Responses;
 using osu.Game.Online.Chat;
 using osu.Game.Overlays.Chat.Listing;
 using osu.Game.Users.Drawables;
@@ -32,8 +35,11 @@ namespace osu.Game.Overlays.Chat.ChannelList
 
         private Box hoverBox = null!;
         private Box selectBox = null!;
-        private OsuSpriteText text = null!;
         private ChannelListItemCloseButton? close;
+        private OsuSpriteText? channelName;
+        private DrawableChatUsername? drawableUsername;
+
+        private Bindable<Colour4> channelNameColour = new Bindable<Colour4>();
 
         [Resolved]
         private Bindable<Channel> selectedChannel { get; set; } = null!;
@@ -82,16 +88,7 @@ namespace osu.Game.Overlays.Chat.ChannelList
                         new Drawable?[]
                         {
                             createIcon(),
-                            text = new TruncatingSpriteText
-                            {
-                                Anchor = Anchor.CentreLeft,
-                                Origin = Anchor.CentreLeft,
-                                Text = Channel.Name,
-                                Font = OsuFont.Torus.With(size: 14, weight: FontWeight.SemiBold),
-                                Colour = colourProvider.Light3,
-                                Margin = new MarginPadding { Bottom = 2 },
-                                RelativeSizeAxes = Axes.X,
-                            },
+                            createChannelName(),
                             createMentionPill(),
                             close = createCloseButton(),
                         }
@@ -100,6 +97,12 @@ namespace osu.Game.Overlays.Chat.ChannelList
             };
 
             Action = () => OnRequestSelect?.Invoke(Channel);
+
+            channelNameColour.BindValueChanged(v =>
+            {
+                channelName?.FadeColour(v.NewValue, 250, Easing.OutQuint);
+                drawableUsername?.FadeColour(v.NewValue, 250, Easing.OutQuint);
+            }, true);
         }
 
         protected override void LoadComplete()
@@ -142,6 +145,31 @@ namespace osu.Game.Overlays.Chat.ChannelList
             };
         }
 
+        private Drawable createChannelName()
+        {
+            if (Channel.Type != ChannelType.PM)
+                return channelName = new TruncatingSpriteText
+                {
+                    Anchor = Anchor.CentreLeft,
+                    Origin = Anchor.CentreLeft,
+                    Text = Channel.Name,
+                    Font = OsuFont.Torus.With(size: 14, weight: FontWeight.SemiBold),
+                    Colour = colourProvider.Light3,
+                    Margin = new MarginPadding { Bottom = 2 },
+                    RelativeSizeAxes = Axes.X,
+                };
+
+            return drawableUsername = new DrawableChatUsername(Channel.Users.First())
+            {
+                Anchor = Anchor.CentreLeft,
+                Origin = Anchor.CentreLeft,
+                Text = Channel.Name,
+                FontSize = 14,
+                AutoSizeAxes = Axes.Both,
+                AccentColour = Color4Extensions.FromHex(Channel.Users.First().Colour ?? "#fff"),
+            };
+        }
+
         private ChannelListItemMentionPill? createMentionPill()
         {
             if (isSelector)
@@ -180,9 +208,10 @@ namespace osu.Game.Overlays.Chat.ChannelList
                 selectBox.FadeOut(200, Easing.OutQuint);
 
             if (Unread.Value || selected)
-                text.FadeColour(colourProvider.Content1, 300, Easing.OutQuint);
+                channelNameColour.Value = colourProvider.Content1;
             else
-                text.FadeColour(colourProvider.Light3, 200, Easing.OutQuint);
+                channelNameColour.Value = colourProvider.Light3;
+
         }
 
         private bool isSelector => Channel is ChannelListing.ChannelListingChannel;
