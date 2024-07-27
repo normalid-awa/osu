@@ -158,7 +158,7 @@ namespace osu.Game.Overlays.Chat.ChannelList
                 Text = Channel.Name,
                 FontSize = 14,
                 AutoSizeAxes = Axes.Both,
-                AccentColour = Color4Extensions.FromHex(user.Colour),
+                AccentColour = Color4Extensions.FromHex(user.Colour ?? "#fff"),
             };
         }
 
