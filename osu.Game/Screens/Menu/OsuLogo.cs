@@ -17,10 +17,12 @@ using osu.Framework.Graphics.Sprites;
 using osu.Framework.Graphics.Textures;
 using osu.Framework.Input.Events;
 using osu.Framework.Utils;
+using osu.Game.Audio;
 using osu.Game.Beatmaps.ControlPoints;
 using osu.Game.Graphics.Backgrounds;
 using osu.Game.Graphics.Containers;
 using osu.Game.Overlays;
+using osu.Game.Skinning;
 using osuTK;
 using osuTK.Graphics;
 using osuTK.Input;
@@ -53,8 +55,8 @@ namespace osu.Game.Screens.Menu
         private Sample sampleClick;
         private SampleChannel sampleClickChannel;
 
-        private Sample sampleBeat;
-        private Sample sampleDownbeat;
+        private ISample sampleBeat;
+        private ISample sampleDownbeat;
 
         private readonly Container colourAndTriangles;
         private readonly TrianglesV2 triangles;
@@ -268,11 +270,18 @@ namespace osu.Game.Screens.Menu
         }
 
         [BackgroundDependencyLoader]
-        private void load(TextureStore textures, AudioManager audio)
+        private void load(TextureStore textures, AudioManager audio, SkinManager skinManager)
         {
+            skinManager.CurrentSkin.BindValueChanged(v =>
+            {
+                ISample skinnedNormalHitSound = v.NewValue.GetSample(new HitSampleInfo(HitSampleInfo.HIT_NORMAL, HitSampleInfo.BANK_NORMAL));
+                ISample skinnedStrongHitSound = v.NewValue.GetSample(new HitSampleInfo(HitSampleInfo.HIT_CLAP, HitSampleInfo.BANK_DRUM));
+
+                sampleBeat = skinnedNormalHitSound ?? audio.Samples.Get(@"Menu/osu-logo-heartbeat");
+                sampleDownbeat = skinnedStrongHitSound ?? audio.Samples.Get(@"Menu/osu-logo-downbeat");
+            }, true);
+
             sampleClick = audio.Samples.Get(@"Menu/osu-logo-select");
-            sampleBeat = audio.Samples.Get(@"Menu/osu-logo-heartbeat");
-            sampleDownbeat = audio.Samples.Get(@"Menu/osu-logo-downbeat");
 
             logo.Texture = textures.Get(@"Menu/logo");
             ripple.Texture = textures.Get(@"Menu/logo");
